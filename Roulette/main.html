@@ -1,0 +1,483 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <style>
+@property --rotate {
+  syntax: "<angle>";
+  initial-value: 132deg;
+  inherits: false;
+}
+
+:root {
+  --card-height: 65vh;
+  --card-width: calc(var(--card-height) / 1.5);
+}
+
+/* General page styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-image: url('banner.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.glass-card {
+    display: flex;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 15px;
+      padding: 20px;
+      width: 90%;
+      align-items: center;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+.card {
+  background: #191c29;
+  width: calc(30% - 20px);
+  height: var(--card-height);
+  padding: 20px;
+  position: relative;
+  border-radius: 6px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.5em;
+  color: rgb(88 199 250 / 0%);
+  cursor: pointer;
+  font-family: cursive;
+  margin: 10px;
+  overflow: hidden;
+}
+
+.card-content {
+  overflow-y: auto;
+  max-height: calc(65vh - 40px);
+  width: 100%;
+}
+
+.card:hover {
+  color: rgb(88 199 250 / 100%);
+  transition: color 1s;
+}
+h2{
+    color: rgb(88 199 250 / 100%);
+    align-items: center;
+}
+
+a {
+  color: #212534;
+  text-decoration: none;
+  font-family: sans-serif;
+  font-weight: bold;
+  margin-top: 2rem;
+}
+
+/* Additional styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #fff;
+}
+
+th {
+  background-color: #007BFF;
+  color: white;
+}
+
+.image-tile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.image-tile img {
+  width: 100%;
+  height: auto;
+  max-width: 200px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.image-tile button, .delete-button, #close-modal {
+  padding: 10px 20px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button {
+      background-color: darkblue;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 20px;
+        transition: all 0.3s;
+      }
+
+    .button:hover {
+      background-color: #0056b3;
+    }
+
+
+.delete-button {
+  background-color: #dc3545;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+.modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100vh;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+.modal-container {
+  /* Add a glassy background effect */
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.modal-container section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.loader {
+  display: flex;
+  justify-content: space-between;
+  width: 300px;
+  margin: 20px auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+  .card {
+    width: 100%;
+    margin: 10px 0;
+  }
+}
+
+#num-winners {
+  width: 200px;
+  height: 50px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #343a40;
+}
+
+#num-winners::placeholder {
+  color: #666;
+}
+
+#num-winners:focus {
+  outline: none;
+  box-shadow: 0 0 5px #343a40;
+}
+
+.loader {
+  display: flex;
+  justify-content: space-between;
+  width: 100px;
+  margin: 20px auto;
+}
+
+.dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #007BFF;
+  animation: loading 1s infinite;
+  animation-delay: calc(0.1s * var(--i));
+}
+
+@keyframes loading {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.glassy-modal {
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.glassy-modal::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    z-index: -1;
+}
+
+    </style>
+</head>
+<body>
+    <!-- Flexbox container for cards -->
+    <div class="glass-card">
+        <!-- Card 1: Participants List -->
+        <div class="card">
+            <h2>Participants List</h2>
+            <div class="card-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="participantsTable">
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <!-- Card 2: Image display with a button -->
+        <div class="card">
+            <h2>Randomizer</h2>
+            <div class="card-content">
+                <div class="image-tile">
+                    <img src="question.jpg" alt="Randomize">
+                    <main class="wrapper">
+                        <input type="number" id="num-winners" placeholder="How many Winners?">
+                    </main>
+                    <br>
+                    <button class="button" id="champ">Select the Winners</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: Winners List -->
+        <div class="card">
+            <h2>Winners List</h2>
+            <div class="card-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody id="winnersTable">
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Winners -->
+        <div class="modal-container" id="winner-modal-container">
+            <div class="modal" style="background: rgba(255, 255, 255, 0.9); width: 300px; padding: 50px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);">
+                <h2 style="text-align: center; color: #007BFF;">Congratulations!</h2>
+                <div class="image-container" style="text-align: center;">
+                    <!-- Add your image here -->
+                    <img src="congrats.gif" alt="congrats" style="max-width: 100%; height: auto;">
+                </div>
+                <ul id="winners-list" style="list-style-type: none; padding: 0; text-align: center;"></ul>
+                <button class="button" id="close-modal" style="margin-top: 20px; display: block; margin-left: auto; margin-right: auto;">Close</button>
+            </div>
+        </div>
+
+    <!-- Modal for Loading Screen -->
+<div class="modal-container" id="loading-modal-container">
+    <section>
+      <div class="loader">
+        <div class="dot" style="--i:0;"></div>
+        <div class="dot" style="--i:1;"></div>
+        <div class="dot" style="--i:2;"></div>
+        <div class="dot" style="--i:3;"></div>
+        <div class="dot" style="--i:4;"></div>
+        <div class="dot" style="--i:5;"></div>
+        <div class="dot" style="--i:6;"></div>
+        <div class="dot" style="--i:7;"></div>
+        <div class="dot" style="--i:8;"></div>
+        <div class="dot" style="--i:9;"></div>
+      </div>
+      <div class="loader">
+        <div class="dot" style="--i:0;"></div>
+        <div class="dot" style="--i:1;"></div>
+        <div class="dot" style="--i:2;"></div>
+        <div class="dot" style="--i:3;"></div>
+        <div class="dot" style="--i:4;"></div>
+        <div class="dot" style="--i:5;"></div>
+        <div class="dot" style="--i:6;"></div>
+        <div class="dot" style="--i:7;"></div>
+        <div class="dot" style="--i:8;"></div>
+        <div class="dot" style="--i:9;"></div>
+      </div>
+    </section>
+  </div>
+
+    <script>
+        // Populate participants from localStorage
+        function populateParticipants() {
+            var participants = JSON.parse(localStorage.getItem('participantsArray')) || [];
+            var tableBody = document.getElementById('participantsTable');
+            tableBody.innerHTML = '';
+            participants.forEach(function(participant, index) {
+                var row = document.createElement('tr');
+                row.innerHTML = `<td>${participant.name}</td><td>${participant.status}</td>
+                                 <td><button class="delete-button" onclick="deleteParticipant(${index})">Delete</button></td>`;
+                tableBody.insertBefore(row, tableBody.firstChild);
+            });
+        }
+
+        // Delete participant
+        function deleteParticipant(index) {
+            var participants = JSON.parse(localStorage.getItem('participantsArray')) || [];
+            participants.splice(index, 1);
+            localStorage.setItem('participantsArray', JSON.stringify(participants));
+            populateParticipants();
+        }
+
+        // Populate winners list
+        function populateWinners() {
+            var winners = JSON.parse(localStorage.getItem('winnersArray')) || [];
+            var tableBody = document.getElementById('winnersTable');
+            tableBody.innerHTML = '';
+            winners.forEach(function(winner) {
+                var row = document.createElement('tr');
+                row.innerHTML = `<td>${winner.name}</td>`;
+                tableBody.insertBefore(row, tableBody.firstChild);
+            });
+        }
+
+       // Select winners
+function selectWinner() {
+    var participants = JSON.parse(localStorage.getItem('participantsArray')) || [];
+    var winners = JSON.parse(localStorage.getItem('winnersArray')) || [];
+    var numWinners = document.getElementById('num-winners').value;
+
+    if (participants.length === 0) {
+        alert("No participants left!");
+        return;
+    }
+
+    if (numWinners <= 0 || numWinners > participants.length) {
+        alert("Invalid number of winners!");
+        return;
+    }
+
+    var loadingModalContainer = document.getElementById('loading-modal-container');
+    loadingModalContainer.style.display = 'block';
+
+    var winnerModalContainer = document.getElementById('winner-modal-container');
+    winnerModalContainer.style.display = 'none'; // Hide the winner modal initially
+
+    var currentWinners = [];
+    for (var i = 0; i < numWinners; i++) {
+        var randomIndex = Math.floor(Math.random() * participants.length);
+        var winner = participants[randomIndex];
+        participants.splice(randomIndex, 1);
+        currentWinners.push(winner);
+        winners.push(winner);
+    }
+
+    setTimeout(function () {
+        loadingModalContainer.style.display = 'none';
+        winnerModalContainer.style.display = 'flex'; // Show the winner modal after loading
+        var winnerList = document.getElementById('winners-list');
+        winnerList.innerHTML = '';
+        currentWinners.forEach(function(winner) {
+            var listItem = document.createElement('li');
+            listItem.textContent = winner.name;
+            winnerList.appendChild(listItem);
+        });
+        localStorage.setItem('participantsArray', JSON.stringify(participants));
+        localStorage.setItem('winnersArray', JSON.stringify(winners));
+        populateParticipants();
+        populateWinners();
+    }, 4000);
+}
+        document.getElementById('champ').addEventListener('click', selectWinner);
+        document.getElementById('close-modal').addEventListener('click', function () {
+            document.getElementById('winner-modal-container').style.display = 'none';
+        });
+
+        window.onload = function() {
+            populateParticipants();
+            populateWinners();
+        };
+
+
+
+          // Function to automatically delete winners when Shift + * is pressed
+          function deleteWinnersOnKeyPress(event) {
+              if (event.shiftKey && event.key === '*') {
+                  var winners = JSON.parse(localStorage.getItem('winnersArray')) || [];
+                  if (winners.length > 0) {
+                      localStorage.removeItem('winnersArray');
+                      populateWinners();
+                  } else {
+                  }
+              }
+          }
+
+          // Add the event listener for keydown
+          document.addEventListener('keydown', deleteWinnersOnKeyPress);
+    </script>
+</body>
+</html>
