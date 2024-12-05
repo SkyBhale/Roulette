@@ -37,7 +37,8 @@ body {
       background: rgba(255, 255, 255, 0.15);
       border-radius: 15px;
       padding: 20px;
-      width: 90%;
+      width: 100%;
+      height: 100%;
       align-items: center;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
@@ -45,10 +46,10 @@ body {
       border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
-.card {
+    .card {
   background: #191c29;
-  width: calc(30% - 20px);
-  height: var(--card-height);
+  height: 90vh; /* Set height to 90% of the viewport height */
+  width: calc(30% - 20px); /* Responsive width */
   padding: 20px;
   position: relative;
   border-radius: 6px;
@@ -67,10 +68,12 @@ body {
 
 .card-content {
   overflow-y: auto;
-  max-height: calc(65vh - 40px);
+  max-height: calc(90vh - 40px); /* Use 90% of viewport height minus 40px */
   width: 100%;
 }
-
+.card table th, .card table td {
+  color: #fff !important;
+}
 .card:hover {
   color: rgb(88 199 250 / 100%);
   transition: color 1s;
@@ -175,6 +178,60 @@ th {
   border-radius: 10px;
   padding: 20px;
 }
+#winner-modal-container {
+  background-image: url(bg.jpg);
+  background-size: cover;
+  background-position: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100vh;
+  display: none;
+  justify-content: center;
+}
+#winner-modal-container {
+  /* Add a glassy background effect */
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+#winner-options {
+    background: rgba(255, 255, 255, 0.2); /* Semi-transparent background */
+    border: 1px solid rgba(255, 255, 255, 0.5); /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    color: #fff; /* Text color */
+    padding: 10px; /* Padding for better spacing */
+    font-size: 16px; /* Font size */
+    backdrop-filter: blur(10px); /* Blur effect */
+    -webkit-backdrop-filter: blur(10px); /* For Safari */
+    appearance: none; /* Remove default styling */
+    cursor: pointer; /* Pointer cursor */
+    transition: background 0.3s ease; /* Transition effect */
+}
+
+#winner-options:hover {
+    background: rgba(255, 255, 255, 0.3); /* Darker background on hover */
+}
+
+#winner-options option {
+    background: rgba(255, 255, 255, 0.9); /* Background for options */
+    color: #000; /* Text color for options */
+}
+
+#winners-list {
+    max-height: 300px; /* Adjust the height as needed */
+    overflow-y: auto;  /* Enable vertical scrolling */
+    margin: 0;         /* Remove default margin */
+    padding: 0;        /* Remove default padding */
+    list-style-type: none; /* Remove bullet points */
+    align-items: left;
+}
 
 .modal-container section {
   display: flex;
@@ -204,6 +261,20 @@ th {
     width: 100%;
     margin: 10px 0;
   }
+}
+#remains {
+    display: block; /* Ensures the label takes up a full line */
+    margin-top: 10px; /* Adds space above the label */
+    font-size: 16px; /* Sets the font size */
+    font-weight: bold; /* Makes the text bold */
+    color: #333; /* Sets the text color */
+    background-color: #f0f0f0; /* Sets a background color */
+    padding: 10px; /* Adds padding around the text */
+    border: 1px solid #ccc; /* Adds a border around the label */
+    border-radius: 5px; /* Rounds the corners of the border */
+    width: fit-content; /* Makes the width fit the content */
+    position: relative; /* Keeps the label in normal flow */
+    /* Optionally, you can use position: fixed; to keep it at a fixed position on the viewport */
 }
 
 #num-winners {
@@ -280,35 +351,44 @@ th {
     <div class="glass-card">
         <!-- Card 1: Participants List -->
         <div class="card">
-            <h2>Participants List</h2>
-            <div class="card-content">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="participantsTable">
-                </tbody>
-            </table>
-            </div>
-        </div>
+          <h2>Participants List</h2>
+          <div class="card-content">
+              <table>
+                  <thead>
+                      <tr>
+                          <th>No.</th>
+                          <th>Name</th>
+                      </tr>
+                  </thead>
+                  <tbody id="participantsTable">
+                  </tbody>
+              </table>
+          </div>
+          <label id="remains" for="remains"></label>
+      </div>
 
         <!-- Card 2: Image display with a button -->
         <div class="card">
             <h2>Randomizer</h2>
             <div class="card-content">
-                <div class="image-tile">
-                    <img src="question.jpg" alt="Randomize">
-                    <main class="wrapper">
-                        <input type="number" id="num-winners" placeholder="How many Winners?">
-                    </main>
+            <div class="image-tile">
+                <img src="minergy.png" alt="Randomize">
+                <main class="wrapper">
+                    <input type="number" id="num-winners" placeholder="How many Winners?">
                     <br>
-                    <button class="button" id="champ">Select the Winners</button>
-                </div>
+                </main>
+                <br>
+                <select id="winner-options" required>
+                        <option value="" disabled selected>Merry Christmas</option>
+                        <option value="consolation">Consolation</option>
+                        <option value="minor">Minor</option>
+                        <option value="major">Major</option>
+                        <option value="grand">Grand</option>
+                </select>
+                    <br>
+                <button class="button" id="champ">Select the Winners</button>
             </div>
+        </div>
         </div>
 
         <!-- Card 3: Winners List -->
@@ -318,31 +398,47 @@ th {
             <table>
                 <thead>
                     <tr>
-                        <th>Name</th>
+                      <th>No.</th>
+                      <th>Name</th>
+                      <th>Category</th>
                     </tr>
                 </thead>
                 <tbody id="winnersTable">
                 </tbody>
             </table>
             </div>
+            <button class="button" onclick="printContent()">Print Table</button>
         </div>
     </div>
 
     <!-- Modal for Winners -->
-        <div class="modal-container" id="winner-modal-container">
-            <div class="modal" style="background: rgba(255, 255, 255, 0.9); width: 300px; padding: 50px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);">
-                <h2 style="text-align: center; color: #007BFF;">Congratulations!</h2>
-                <div class="image-container" style="text-align: center;">
-                    <!-- Add your image here -->
-                    <img src="congrats.gif" alt="congrats" style="max-width: 100%; height: auto;">
-                </div>
-                <ul id="winners-list" style="list-style-type: none; padding: 0; text-align: center;"></ul>
-                <button class="button" id="close-modal" style="margin-top: 20px; display: block; margin-left: auto; margin-right: auto;">Close</button>
-            </div>
-        </div>
-
+      <div class="modal-container" id="winner-modal-container">
+          <audio id="background-audio" loop>
+              <source src="clap.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+          </audio>
+        <div class="modal" style="background: rgba(255, 255, 255, 0.3); /* Semi-transparent white */backdrop-filter: blur(10px); /* Blurs the background */width: 70%; height: 100%; padding: 20px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: space-between;">
+              <div class="image-container" style="flex: 1; text-align: center;">
+                  <img src="congrats.gif" alt="congrats" style="max-width: 100%; height: auto;">
+              </div>
+              <div style="flex: 2; text-align: center;">
+                  <h2 style="font-size: 100px; color: #007BFF;">Congratulations!</h2>
+                  <ul id="winners-list" style="list-style-type: none; padding: 0;font-size: 60px; color: white; text-align: center;"></ul>
+                  <button class="button" id="close-modal" style="margin-top: 20px;">Close</button>
+              </div>
+              <div class="image-container" style="flex: 1; text-align: center;">
+                  <img src="confetti.gif" alt="congrats" style="max-width: 100%; height: auto;">
+              </div>
+          </div>
+          
+      </div>
+      
     <!-- Modal for Loading Screen -->
 <div class="modal-container" id="loading-modal-container">
+  <audio id="background-music" loop>
+        <source src="roll.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
     <section>
       <div class="loader">
         <div class="dot" style="--i:0;"></div>
@@ -369,47 +465,201 @@ th {
         <div class="dot" style="--i:9;"></div>
       </div>
     </section>
-  </div>
+</div>
 
-    <script>
-        // Populate participants from localStorage
-        function populateParticipants() {
-            var participants = JSON.parse(localStorage.getItem('participantsArray')) || [];
-            var tableBody = document.getElementById('participantsTable');
-            tableBody.innerHTML = '';
-            participants.forEach(function(participant, index) {
-                var row = document.createElement('tr');
-                row.innerHTML = `<td>${participant.name}</td><td>${participant.status}</td>
-                                 <td><button class="delete-button" onclick="deleteParticipant(${index})">Delete</button></td>`;
-                tableBody.insertBefore(row, tableBody.firstChild);
-            });
+  <script>
+    function printContent() {
+    const originalTable = document.getElementById('winnersTable');
+    const printTable = originalTable.cloneNode(true);
+    
+    // Create a new window for printing
+    const printWindow = window.open('', '_blank');
+    const styles = `
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            position: relative; 
+            height: 100vh; /* Ensure full height */
+            margin: 0; /* Remove default margin */
+            padding: 20px; /* Add some padding */
         }
+        h1 {
+            text-align: center; /* Center the title */
+            margin-bottom: 20px; /* Space below the title */
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 0 auto; /* Center the table */
+        }
+        th, td { 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+            text-align: left; 
+        }
+        th { 
+            background-color: #007BFF; 
+            color: white; /* Change text color for better contrast */
+        }
+        tr:nth-child(even) { 
+            background-color: #f2f2f2; /* Zebra striping for better readability */
+        }
+        .watermark {
+            position: fixed; /* Fixed position for printing */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('minergy.png'); /* Replace with your image path */
+            background-size: contain; /* Scale to fit while maintaining aspect ratio */
+            background-repeat: no-repeat;
+            background-position: center; /* Center the image */
+            opacity: 0.1; /* Adjust opacity as needed */
+            pointer-events: none; /* Ensures the watermark does not interfere with interactions */
+        }
+        @media print {
+            .watermark {
+                /* Same styles for print */
+            }
+            body {
+                padding: 0; /* Remove padding for print */
+            }
+            h1 {
+                margin: 0; /* Remove margin for print */
+            }
+        }
+    </style>
+    `;
 
-        // Delete participant
-        function deleteParticipant(index) {
-            var participants = JSON.parse(localStorage.getItem('participantsArray')) || [];
-            participants.splice(index, 1);
-            localStorage.setItem('participantsArray', JSON.stringify(participants));
+    // Create a new table for printing
+    let printTableHTML = `
+        <h1>Winners</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    // Populate the new table with winners data
+    const winners = JSON.parse(localStorage.getItem('winnersArray')) || [];
+    winners.forEach((winner, index) => {
+        printTableHTML += `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${winner.name}</td>
+                <td>${winner.category}</td>
+            </tr>
+        `;
+    });
+
+    printTableHTML += `
+            </tbody>
+        </table>
+    `;
+
+    printWindow.document.write('<html><head><title>Print Table</title>' + styles + '</head><body>');
+    printWindow.document.write('<div class="watermark"></div>'); // Add watermark div
+    printWindow.document.write(printTableHTML);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close(); 
+    printWindow.print();
+}
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Function to delete winners or participants based on keypress
+          function deleteWinnersOnKeyPress(event) {
+              if (event.shiftKey && event.key === '*') {
+                  var winners = JSON.parse(localStorage.getItem('winnersArray')) || [];
+                  if (winners.length > 0) {
+                      localStorage.removeItem('winnersArray');
+                      populateWinners();
+                  }
+              }
+              if (event.shiftKey && event.key.toLowerCase() === 'p') {
+                  var participants = JSON.parse(localStorage.getItem('participantsArray')) || [];
+                  if (participants.length > 0) {
+                      localStorage.removeItem('participantsArray');
+                      populateParticipants();
+                  }
+              }
+          }
+
+          // Function to navigate back on keypress
+          function goBackOnKeyPress(event) {
+              if (event.shiftKey && event.key === '&') {
+                  window.history.back(); // Navigate back to the last page
+              }
+          }
+
+          // Add event listeners for keydown events
+          document.addEventListener('keydown', function(event) {
+              deleteWinnersOnKeyPress(event);
+              goBackOnKeyPress(event);
+          });
+            // Initialize a variable to track the sort order
+            let isAscending = true;
+
+            function populateParticipants() {
+                var participants = JSON.parse(localStorage.getItem('participantsArray')) || [];
+                
+                // Sort participants alphabetically by last name, then by first name
+                participants.sort(function(a, b) {
+                    var nameA = a.name.split(' ');
+                    var nameB = b.name.split(' ');
+
+                    var lastNameA = nameA[nameA.length - 1].toLowerCase();
+                    var lastNameB = nameB[nameB.length - 1].toLowerCase();
+
+                    if (lastNameA < lastNameB) return -1;
+                    if (lastNameA > lastNameB) return 1;
+
+                    var firstNameA = nameA[0].toLowerCase();
+                    var firstNameB = nameB[0].toLowerCase();
+                    return firstNameA.localeCompare(firstNameB);
+                });
+                
+                var tableBody = document.getElementById('participantsTable');
+                tableBody.innerHTML = ''; // Clear existing rows
+                
+                participants.forEach(function(participant, index) {
+                    var nameParts = participant.name.split(' ');
+                    var lastName = nameParts.pop(); // Get the last name
+                    var firstName = nameParts.join(' '); // Join remaining parts as first name
+
+                    var row = document.createElement('tr');
+                    row.innerHTML = `<td>${index + 1}</td><td>${lastName}, ${firstName}</td>`;
+                    tableBody.appendChild(row); // Append the new row
+                });
+
+                // Update the participant count after populating the table
+                updateParticipantCount();
+            }
+
+            // Function to update the label with the current number of participants
+            function updateParticipantCount() {
+                const participantsTable = document.getElementById('participantsTable'); // Correctly reference the table body
+                const rows = participantsTable.getElementsByTagName('tr');
+                const currentCount = rows.length; // Current number of participants
+
+                // Update the label text
+                const remainsLabel = document.getElementById('remains');
+                remainsLabel.textContent = `${currentCount} participant${currentCount !== 1 ? 's' : ''}`; // Pluralize if necessary
+            }
+
+            // Call populateParticipants to load participants on page load or whenever needed
             populateParticipants();
-        }
 
-        // Populate winners list
-        function populateWinners() {
-            var winners = JSON.parse(localStorage.getItem('winnersArray')) || [];
-            var tableBody = document.getElementById('winnersTable');
-            tableBody.innerHTML = '';
-            winners.forEach(function(winner) {
-                var row = document.createElement('tr');
-                row.innerHTML = `<td>${winner.name}</td>`;
-                tableBody.insertBefore(row, tableBody.firstChild);
-            });
-        }
+            document.getElementById('champ').addEventListener('click', selectWinner);
 
-       // Select winners
-function selectWinner() {
+            function selectWinner() {
     var participants = JSON.parse(localStorage.getItem('participantsArray')) || [];
-    var winners = JSON.parse(localStorage.getItem('winnersArray')) || [];
-    var numWinners = document.getElementById('num-winners').value;
+    var numWinners = parseInt(document.getElementById('num-winners').value);
+    var winnerOption = document.getElementById('winner-options').value; // Get the selected category
 
     if (participants.length === 0) {
         alert("No participants left!");
@@ -432,52 +682,117 @@ function selectWinner() {
         var randomIndex = Math.floor(Math.random() * participants.length);
         var winner = participants[randomIndex];
         participants.splice(randomIndex, 1);
-        currentWinners.push(winner);
-        winners.push(winner);
+        currentWinners.push({
+            name: winner.name,
+            category: winnerOption // Assign the selected category to the winner
+        });
     }
 
-    setTimeout(function () {
-        loadingModalContainer.style.display = 'none';
-        winnerModalContainer.style.display = 'flex'; // Show the winner modal after loading
-        var winnerList = document.getElementById('winners-list');
-        winnerList.innerHTML = '';
-        currentWinners.forEach(function(winner) {
-            var listItem = document.createElement('li');
-            listItem.textContent = winner.name;
-            winnerList.appendChild(listItem);
-        });
-        localStorage.setItem('participantsArray', JSON.stringify(participants));
-        localStorage.setItem('winnersArray', JSON.stringify(winners));
-        populateParticipants();
-        populateWinners();
-    }, 4000);
-}
-        document.getElementById('champ').addEventListener('click', selectWinner);
-        document.getElementById('close-modal').addEventListener('click', function () {
-            document.getElementById('winner-modal-container').style.display = 'none';
-        });
+    // Function to show the winner modal and play audio
+    function showWinnerModal() {
+        const winnerModalContainer = document.getElementById('winner-modal-container');
+        const audio = document.getElementById('background-audio');
 
-        window.onload = function() {
+        winnerModalContainer.style.display = 'flex'; // Show the winner modal
+        audio.play().catch(function(error) {
+            console.error("Audio playback failed:", error);
+        }); // Play the background audio
+    }
+
+    // Function to hide the winner modal and stop audio
+    function hideWinnerModal() {
+        const winnerModalContainer = document.getElementById('winner-modal-container');
+        const audio = document.getElementById('background-audio');
+
+        winnerModalContainer.style.display = 'none'; // Hide the winner modal
+        audio.pause(); // Pause the background audio
+        audio.currentTime = 0; // Reset the audio to the beginning
+    }
+
+    // Event listener for the close button
+    document.getElementById('close-modal').addEventListener('click', hideWinnerModal);
+
+    // Function to show the loading modal and play music
+    function showLoadingModal() {
+        const loadingModalContainer = document.getElementById('loading-modal-container');
+        const music = document.getElementById('background-music');
+
+        loadingModalContainer.style.display = 'block'; // Show the loading modal
+        music.play(); // Play the background music
+    }
+
+    // Function to hide the loading modal and stop music
+    function hideLoadingModal() {
+        const loadingModalContainer = document.getElementById('loading-modal-container');
+        const music = document.getElementById('background-music');
+
+        loadingModalContainer.style.display = 'none'; // Hide the loading modal
+        music.pause(); // Pause the background music
+        music.currentTime = 0; // Reset the music to the beginning
+    }
+
+    // Example function to handle the loading and winner display
+    function handleLoadingAndWinners() {
+        showLoadingModal(); // Show the loading modal and play music
+
+        setTimeout(function() {
+            hideLoadingModal(); // Hide the loading modal and stop music
+            showWinnerModal(); // Show the winner modal and play audio
+            var winnerList = document.getElementById('winners-list');
+
+            // Get existing winners from local storage
+            var existingWinners = JSON.parse(localStorage.getItem('winnersArray')) || [];
+
+            // Clear the winner list in the modal
+            winnerList.innerHTML = '';
+
+            // Display only the current winners in the modal
+            currentWinners.forEach(function(winner, index) {
+                var listItem = document.createElement('li');
+                listItem.textContent = `${index + 1}. ${winner.name}`; // Add category to the display
+                winnerList.appendChild(listItem);
+            });
+
+            // Update the winners array in local storage with both existing and current winners
+            var allWinners = existingWinners.concat(currentWinners);
+            localStorage.setItem('participantsArray', JSON.stringify(participants));
+            localStorage.setItem('winnersArray', JSON.stringify(allWinners)); // Store the updated winners
+
             populateParticipants();
             populateWinners();
-        };
+        }, 4000);
+    }
 
+    // Call the function to handle loading and winners
+    handleLoadingAndWinners();
+}
 
+            function populateWinners() {
+              var winners = JSON.parse(localStorage.getItem('winnersArray')) || [];
+              var tableBody = document.getElementById('winnersTable');
+              tableBody.innerHTML = ''; // Clear existing rows
+              
+              // Populate the winners table with existing winners
+              winners.forEach(function(winner, index) {
+                  var nameParts = winner.name.split(' ');
+                  var lastName = nameParts.pop(); // Get the last name
+                  var firstName = nameParts.join(' '); // Join remaining parts as first name
 
-          // Function to automatically delete winners when Shift + * is pressed
-          function deleteWinnersOnKeyPress(event) {
-              if (event.shiftKey && event.key === '*') {
-                  var winners = JSON.parse(localStorage.getItem('winnersArray')) || [];
-                  if (winners.length > 0) {
-                      localStorage.removeItem('winnersArray');
-                      populateWinners();
-                  } else {
-                  }
-              }
+                  var row = document.createElement('tr');
+                  row.innerHTML = `<td>${index + 1}</td><td>${lastName}, ${firstName}</td><td>${winner.category}</td>`;
+                  tableBody.appendChild(row); // Append the new row
+              });
           }
 
-          // Add the event listener for keydown
-          document.addEventListener('keydown', deleteWinnersOnKeyPress);
-    </script>
+            document.getElementById('close-modal').addEventListener('click', function () {
+                document.getElementById('winner-modal-container').style.display = 'none';
+            });
+
+            // Populate participants and winners on page load
+            populateParticipants();
+            populateWinners();
+        });
+        
+</script>
 </body>
 </html>

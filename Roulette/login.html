@@ -180,77 +180,126 @@ input[type="submit"]:hover {
   </style>
 </head>
 <body>
-  <div class="glass-card">
-    <div class="card-content">
-      <button class="button" id="open-modal">Add Participants</button>
-      <button class="button" id="redirect-button">Start</button>
-    </div>
-  </div>
 
+  <div class="glass-card">
+      <div class="card-content">
+          <button class="button" id="open-modal">Add Participants</button>
+          <button class="button" id="redirect-button">Start</button>
+      </div>
+  </div>
+  
   <!-- The Modal -->
   <div id="myModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Add Participants</h2>
-      <form id="participantForm">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" placeholder="Enter your name" required>
-
-        <label for="status">Status:</label>
-        <select id="status" name="status" required>
-          <option value="" disabled selected>Select status</option>
-          <option value="Contractual">Contractual</option>
-          <option value="Regular">Regular</option>
-        </select>
-
-        <input type="submit" value="Submit">
-      </form>
-    </div>
+      <div class="modal-content">
+          <span class="close">&times;</span>
+          <h2>Add Participants</h2>
+          <form id="participantForm">
+              <label for="name">Name:</label>
+              <input type="text" id="name" name="name" placeholder="Enter your name" required>
+  
+              <label for="department">Status:</label>
+              <select id="department" name="department" required>
+                  <option value="" disabled selected>Select department</option>
+                  <option value="PABD">PABD</option>
+                  <option value="FAPL">FAPL</option>
+                  <option value="OEARM">OEARM</option>
+                  <option value="OP-COO">OP-COO</option>
+                  <option value="DBU">DBU</option>
+                  <option value="REBU">REBU</option>
+                  <option value="CHEPP">REBU-CHEPP</option>
+                  <option value="HDRO">REBU-HYDRO</option>
+                  <option value="BPC">REBU-BPC</option>
+              </select>
+  
+              <input type="submit" value="Submit">
+          </form>
+  
+          <h2>Upload Participants</h2>
+          <input type="file" id="file-input" class="button" accept=".txt">
+          <button id="submit-file" class="button">Upload</button>
+          <div id="output"></div>
+      </div>
   </div>
-
+  
   <script>
       // Modal handling
       var modal = document.getElementById("myModal");
       var btn = document.getElementById("open-modal");
       var span = document.getElementsByClassName("close")[0];
       var next = document.getElementById("redirect-button");
-
+  
       // Open modal
       btn.onclick = function() {
-        modal.style.display = "flex";
+          modal.style.display = "flex";
       }
-
+  
       // Close modal when 'X' is clicked
       span.onclick = function() {
-        modal.style.display = "none";
+          modal.style.display = "none";
       }
-
+  
       // Handle form submission
       document.getElementById('participantForm').onsubmit = function(e) {
-        e.preventDefault(); // Prevent page refresh
-
-        var name = document.getElementById('name').value;
-        var status = document.getElementById('status').value;
-
-        // Retrieve participants array from localStorage, or initialize it
-        var participants = JSON.parse(localStorage.getItem('participantsArray')) || [];
-
-        // Add new participant to the array
-        participants.push({ name: name, status: status });
-
-        // Store updated participants array back in localStorage
-        localStorage.setItem('participantsArray', JSON.stringify(participants));
-
-        // Clear form fields after submission
-        document.getElementById('participantForm').reset();
-
+          e.preventDefault(); // Prevent page refresh
+  
+          var name = document.getElementById('name').value;
+          var department = document.getElementById('department').value;
+  
+          // Retrieve participants array from localStorage, or initialize it
+          var participants = JSON.parse(localStorage.getItem('participantsArray')) || [];
+  
+          // Add new participant to the array
+          participants.push({ name: name, department: department });
+  
+          // Store updated participants array back in localStorage
+          localStorage.setItem('participantsArray', JSON.stringify(participants));
+  
+          // Clear form fields after submission document.getElementById('participantForm').reset();
       }
+  
+        // Handle file upload
+        document.getElementById('submit-file').onclick = function() {
+            const fileInput = document.getElementById('file-input');
+            const file = fileInput.files[0];
+            const outputDiv = document.getElementById('output');
 
-      // Handle manual redirection with the "Redirect Page" button
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const text = event.target.result;
+                    const participantsArray = text.split('\n').map(line => {
+                        // Trim whitespace and skip empty lines
+                        line = line.trim();
+                        if (!line) return null; // Skip empty lines
+
+                        const [lastname, firstname, department] = line.split(',');
+                        // Ensure all parts are defined and trimmed
+                        return {
+                            name: `${firstname ? firstname.trim() : ''} ${lastname ? lastname.trim() : ''}`,
+                            department: department ? department.trim() : ''
+                        };
+                    }).filter(participant => participant && participant.name && participant.department); // Filter out nulls and incomplete entries
+
+                    // Retrieve existing participants from localStorage
+                    var existingParticipants = JSON.parse(localStorage.getItem('participantsArray')) || [];
+                    // Combine new participants with existing ones
+                    existingParticipants = existingParticipants.concat(participantsArray);
+                    // Store updated participants array back in localStorage
+                    localStorage.setItem('participantsArray', JSON.stringify(existingParticipants));
+
+                  // Show an alert instead of setting innerHTML
+                  alert("Participants uploaded successfully!");
+                }
+                reader.readAsText(file);
+            } else {
+                outputDiv.innerHTML = "Please select a file.";
+            }
+        }
+  
+      // Handle manual redirection with the "Start" button
       next.onclick = function() {
-        window.location.href = 'main.html'; // Redirect to the main page
+          window.location.href = 'main.html'; // Redirect to the main page
       }
-
   </script>
-</body>
+  </body>
 </html>
