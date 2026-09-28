@@ -1,0 +1,94 @@
+# Self-Signed HTTPS for `localhost` with XAMPP
+
+Install OPENSSL
+Install XAMPP
+
+Check Environment Variables for OPENssl
+Add to path and move priority 2 paces up
+
+check openssl version in cmd before proceeding
+
+
+## Step 1 — Generate the CA (Root)
+
+bash
+# CA private key
+openssl genrsa -out Mine-RootCA.key 4096
+
+# CA certificate (self-signed)
+openssl req -x509 -new -key Mine-RootCA.key -out Mine-RootCA.crt -days 3650
+  -subj "/CN=My Local Root CA"
+  -addext "basicConstraints=critical,CA:TRUE"
+  -addext "keyUsage=critical,keyCertSign,cRLSign"
+
+
+## Step 2 — Generate the Server Certificate (signed by your CA)
+
+```bash
+# Server private key
+openssl genrsa -out localhost.key 2048
+
+# CSR
+openssl req -new -key localhost.key -out localhost.csr
+  -subj "/CN=localhost"
+
+# Sign with your CA
+openssl x509 -req -in localhost.csr
+  -CA Mine-RootCA.crt -CAkey Mine-RootCA.key -CAcreateserial
+  -out localhost.crt -days 3650 -sha256
+  -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nextendedKeyUsage=serverAuth")
+
+
+# file: san.cnf
+subjectAltName=DNS:localhost,IP:127.0.0.1
+extendedKeyUsage=serverAuth
+
+> Then use `-extfile san.cnf` instead of `-extfile <(...)`.
+
+## Step 3 — Install the CA in the OS Trust Store
+
+**Windows:**
+1. Double-click `Mine-RootCA.crt` → **Install Certificate**
+2. Store: **Local Machine**
+3. Place in: **Trusted Root Certification Authorities**
+4. Click OK, confirm, restart your browser
+
+> **Firefox** uses its own store: import via `about:preferences#privacy` → **Certificates** → **View Certificates** → **Import**, or set `security.enterprise_roots.enabled` to `true` in `about:config`.
+
+## Step 4 — Place Files in XAMPP
+
+Copy your files to:
+
+C:\xampp\apache\conf\ssl.crt\localhost.crt
+C:\xampp\apache\conf\ssl.key\localhost.key
+
+
+(You don't need to copy the CA files here — they're only for the trust store.)
+
+## Step 5 — Configure Apache
+
+**`C:\xampp\apache\conf\httpd.conf`** — uncomment these two lines:
+
+apache
+LoadModule ssl_module modules/mod_ssl.so
+Include conf/extra/httpd-ssl.conf
+
+
+**`C:\xampp\apache\conf\extra\httpd-ssl.conf`** — replace the `<VirtualHost>` block with:
+
+apache
+<VirtualHost _default_:443>
+    DocumentRoot "C:/xampp/htdocs"
+    ServerName localhost
+
+    SSLEngine on
+    SSLCertificateFile "conf/ssl.crt/localhost.crt"
+    SSLCertificateKeyFile "conf/ssl.key/localhost.key"
+</VirtualHost>
+
+
+## Step 6 — Restart & Verify
+
+1. Stop Apache in the XAMPP Control Panel
+2. Start Apache
+3. Open `https://localhost` in your browser
